@@ -30,10 +30,21 @@ h1 {
 #sort-pane {
   background-color: #c4c4c4; }
 
+#keyword-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 20px; }
+
 #keyword-buttons .btn {
   width: 50%;
   white-space: normal;
-  word-break: break-word; }
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  #keyword-buttons .btn span {
+    margin-right: 10px; }
 
 #sort-options {
   float: left; }
@@ -48,10 +59,9 @@ h1 {
   font-size: 14px !important; }
   .list-view .catalog-item {
     width: 100%;
-    padding: 5px; }
-  .list-view .catalog-item:nth-child(odd) {
+    padding: 5px;
     background-color: white; }
-  .list-view .catalog-item:nth-child(even) {
+  .list-view .catalog-item.even {
     background-color: #ececec; }
   .list-view .cover-holder {
     display: none; }

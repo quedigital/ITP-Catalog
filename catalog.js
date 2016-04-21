@@ -1,14 +1,9 @@
-// TODO: style rows after layout (for alternate row colors)
-// TODO: organize keyword buttons in an equal-row-height table
-
 $(function () {
 
 	var url = "catalog.txt";
 
 	var keywords = [];
 	var items = [];
-
-	var changingView = false;
 
 	function onDataLoaded (csv) {
 		parseText(csv);
@@ -85,11 +80,13 @@ $(function () {
 		for (var i = 0; i < keywords.length; i++) {
 			var key = keywords[i];
 
-			var btn = $("<label>", {class: "btn", text: " " + key, "data-keywords": key });
+			var btn = $("<label>", {class: "btn", "data-keywords": key });
 			var input = $("<input>", {type: "checkbox", autocomplete: "off"});
 			var span = $("<span>", {class: "glyphicon glyphicon-ok"});
 
 			btn.addClass(classes[i % classes.length]);
+			var lbl = $("<span>", { text: " " + key });
+			btn.append(lbl);
 			btn.append(input);
 			btn.prepend(span);
 			$("#keyword-buttons").append(btn);
@@ -141,7 +138,6 @@ $(function () {
 			var t = ", " + item.author + " (" + item.date.getFullYear() + ") " + item.price + " " + item.isbn;
 			var p = $("<p>");
 			p.append(a.clone());
-			//p.append($("<span>", { text: t }));
 			p.append($("<span>", { class: "author", text: item.author} ));
 			p.append($("<span>", { class: "date", text: item.date.getFullYear() }));
 			p.append($("<span>", { class: "price", text: item.price }));
@@ -181,16 +177,8 @@ $(function () {
 
 		$(".isotope").on("arrangeComplete", function (event, filteredItems) {
 			$("#num-showing").text(filteredItems.length + " showing");
-		});
 
-		$(".isotope").on("layoutComplete", function (event, laidOutItems) {
-			// do one more layout in 100ms (in case there were size adjustments to the tiles)
-			if (changingView) {
-				changingView = false;
-				setTimeout(function () {
-					$(".isotope").isotope("layout");
-				}, 100);
-			}
+			colorCodeResults(filteredItems);
 		});
 	}
 
@@ -242,8 +230,6 @@ $(function () {
 	}
 
 	function onClickView (event) {
-		//changingView = true;
-
 		$("#view-buttons label").removeClass("btn-primary").addClass("btn-default");
 		$(event.currentTarget).removeClass("btn-default").addClass("btn-primary");
 
@@ -285,8 +271,21 @@ $(function () {
 		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
 	}
 
+	function colorCodeResults (items) {
+		for (var i = 0; i < items.length; i++) {
+			var item = $(items[i].element);
+			if (i % 2 == 0)
+				item.addClass("even");
+			else
+				item.removeClass("even");
+		}
+	}
+
 	$.ajax({
 		type: 'GET',
 		url: url,
 	}).done(onDataLoaded);
 });
+
+// DONE: organize keyword buttons in an equal-row-height table [flexbox]
+// DONE: style rows after layout (for alternate row colors)

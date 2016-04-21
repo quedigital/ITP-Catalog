@@ -44,12 +44,23 @@ h1 {
 }
 
 #keyword-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 #keyword-buttons .btn {
     width: 50%;
     white-space: normal;
     word-break: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+        margin-right: 10px;
+    }
 }
 
 #sort-options {
@@ -73,13 +84,10 @@ h1 {
     .catalog-item {
         width: 100%;
         padding: 5px;
-    }
-
-    .catalog-item:nth-child(odd) {
         background-color: white;
     }
 
-    .catalog-item:nth-child(even) {
+    .catalog-item.even {
         background-color: #ececec;
     }
 
