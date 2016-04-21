@@ -1,0 +1,181 @@
+body {
+    background-color: lightgray;
+    margin-bottom: 15em;
+}
+
+#downloadLink {
+    display: none;
+}
+
+#download-button {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 20px;
+}
+
+h1 {
+    text-align: center;
+
+    img {
+        float: left;
+        height: 1em;
+        vertical-align: top;
+    }
+
+    span {
+    }
+}
+
+#keyword-buttons .btn span.glyphicon {
+    opacity: 0;
+}
+
+#keyword-buttons .btn.active span.glyphicon {
+    opacity: 1;
+}
+
+#filter-pane {
+    background-color: #ababab;
+}
+
+#sort-pane {
+    background-color: #c4c4c4;
+}
+
+#keyword-buttons {
+}
+
+#keyword-buttons .btn {
+    width: 50%;
+    white-space: normal;
+    word-break: break-word;
+}
+
+#sort-options {
+    float: left;
+}
+
+#view-options {
+    float: right;
+}
+
+#view-label {
+    text-align: right;
+}
+
+#view-buttons {
+}
+
+.list-view {
+    font-size: 14px !important;
+
+    .catalog-item {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .catalog-item:nth-child(odd) {
+        background-color: white;
+    }
+
+    .catalog-item:nth-child(even) {
+        background-color: #ececec;
+    }
+
+    .cover-holder {
+        display: none;
+    }
+
+    p {
+        margin: 0;
+        width: 100%;
+
+        a, span {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .title {
+            width: 40em;
+        }
+
+        .author {
+            width: 10em;
+            padding-left: 1em;
+        }
+
+        .date {
+            width: 5em;
+            padding-left: 1em;
+        }
+
+        .price {
+            width: 5em;
+            padding-left: 1em;
+        }
+
+        .isbn {
+            width: 12em;
+            padding-left: 1em;
+        }
+    }
+}
+
+.covers-view {
+    .list-holder {
+        display: none;
+    }
+
+    .catalog-item {
+        position: relative;
+        width: 250px;
+        height: auto;
+        margin: 5px;
+        padding: 10px;
+        background: #e3f3ff;
+        transition: background .25s ease-out;
+    }
+
+    .catalog-item:hover {
+        background: #d0ebe3;
+    }
+
+    .catalog-item h3 {
+        margin-top: 0;
+    }
+
+    .catalog-item .cover {
+        display: table-cell;
+        float: right;
+        width: 50%;
+        position: relative;
+    }
+
+    .catalog-item img {
+        width: 100%;
+        position: relative;
+    }
+
+    .catalog-item .price {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-weight: bold;
+        margin-left: 10px;
+        color: #920000;
+    }
+
+    .catalog-item .author {
+        margin: 0;
+    }
+
+    .catalog-item .date {
+        font-size: 11px;
+    }
+}
+
+#catalog {
+    margin-top: 3em;
+    padding-bottom: 3em;
+}
