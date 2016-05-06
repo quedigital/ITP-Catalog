@@ -187,3 +187,51 @@ h1 {
     margin-top: 3em;
     padding-bottom: 3em;
 }
+
+.keyword-btn {
+}
+
+.keyword-1 {
+	background-image: linear-gradient(to bottom, #3781a1 0, #2a627a 100%);
+	border-color: #2a627a;
+
+	&:hover {
+		background-color: #2a627a;
+	}
+}
+
+.keyword-2 {
+	background-image: linear-gradient(to bottom, #7F7CAF 0, #535172 100%);
+	border-color: #535172;
+
+	&:hover {
+		background-color: #535172;
+	}
+}
+
+.keyword-3 {
+	background-image: linear-gradient(to bottom, #4e809e 0, #435e7b 100%);
+	border-color: #435e7b;
+
+	&:hover {
+		background-color: #435e7b;
+	}
+}
+
+.keyword-4 {
+	background-image: linear-gradient(to bottom, #28587B 0, #18364b 100%);
+	border-color: #18364b;
+
+	&:hover {
+		background-color: #18364b;
+	}
+}
+
+.keyword-5 {
+	background-image: linear-gradient(to bottom, #348d8f 0, #286d6f 100%);
+	border-color: #286d6f;
+
+	&:hover {
+		background-color: #286d6f;
+	}
+}

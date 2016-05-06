@@ -50,17 +50,21 @@ $(function () {
 			if (j != -1 && n > 0) {
 				var line = csv.substr(i, j - i);
 				var row = line.split("\t");
-				var key = trimString(row[8]);
-				if (key != "" && keywords.indexOf(key) == -1) {
-					keywords.push(key);
+				var key = trimString(row[9]);
+				var keys = key.split(",");
+				for (var k = 0; k < keys.length; k++) {
+					var thisKey = trimString(keys[k]);
+					if (thisKey != "" && keywords.indexOf(thisKey) == -1) {
+						keywords.push(thisKey);
+					}
 				}
 
 				var item = {
-					isbn: trimString(row[0]),
-					title: trimString(row[1]),
-					author: trimString(row[2]),
-					date: toDate(row[5]),
-					price: row[6],
+					isbn: trimString(row[1]),
+					title: trimString(row[2]),
+					author: trimString(row[3]),
+					date: toDate(row[6]),
+					price: row[7],
 					keywords: key
 				};
 
@@ -75,12 +79,12 @@ $(function () {
 	}
 
 	function addKeywordButtons () {
-		var classes = ["btn-primary", "btn-info", "btn-warning", "btn-danger", "btn-default"];
+		var classes = ["keyword-1", "keyword-2", "keyword-3", "keyword-4", "keyword-5"];
 
 		for (var i = 0; i < keywords.length; i++) {
 			var key = keywords[i];
 
-			var btn = $("<label>", {class: "btn", "data-keywords": key });
+			var btn = $("<label>", {class: "btn btn-primary keyword-btn", "data-keywords": key });
 			var input = $("<input>", {type: "checkbox", autocomplete: "off"});
 			var span = $("<span>", {class: "glyphicon glyphicon-ok"});
 
@@ -117,7 +121,7 @@ $(function () {
 			var coverHolder = $("<div>", { class: "cover-holder" });
 
 			var h = $("<h3>");
-			var a = $("<a>", { class: "title", text: item.title, href: "https://www.informit.com/search/index.aspx?query=" + item.isbn, target: "_blank" });
+			var a = $("<a>", { class: "title", text: item.title, href: "http://www.informit.com/title/" + item.isbn, target: "_blank" });
 			h.append(a);
 			var div = $("<div>", { class: "cover"} );
 			var img = $("<img>", { src: "https://www.informit.com/ShowCover.aspx?isbn=" + item.isbn + "&type=f" } );
@@ -210,9 +214,9 @@ $(function () {
 
 	function filterBySelectedKeywords (keys) {
 		var keys = getSelectedKeywords();
-		var this_keys = $(this).attr("data-keywords").split(";");
+		var this_keys = $(this).attr("data-keywords").split(",");
 		for (var i = 0; i < this_keys.length; i++) {
-			var k = this_keys[i];
+			var k = trimString(this_keys[i]);
 			if (keys.indexOf(k) != -1) {
 				return true;
 			}
