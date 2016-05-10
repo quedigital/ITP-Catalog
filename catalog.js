@@ -118,7 +118,7 @@ $(function () {
 				"data-author": item.author,
 				"data-keywords": item.keywords,
 				"data-price": toPrice(item.price),
-				"data-date": item.date,
+				"data-date": item.date.getTime(),
 				"data-index": i
 			});
 
@@ -172,15 +172,16 @@ $(function () {
 				title: '.title',
 				"highest-price": '[data-price] parseFloat',
 				"lowest-price": '[data-price] parseFloat',
-				"newest": "[data-index] parseInt",
-				"oldest": "[data-index] parseInt"
+				"newest": "[data-date]",
+				"oldest": "[data-date]"
 			},
 			sortAscending: {
 				"highest-price": false,
 				"lowest-price": true,
-				"newest": true,
-				"oldest": false
-			}
+				"newest": false,
+				"oldest": true
+			},
+			sortBy: "newest"
 		});
 
 		$(".isotope").on("arrangeComplete", function (event, filteredItems) {
@@ -269,7 +270,7 @@ $(function () {
 		for (var i = 0; i < iso.filteredItems.length; i++) {
 			var el = $(iso.filteredItems[i].element);
 
-			var d = new Date(el.attr("data-date"));
+			var d = new Date(parseInt(el.attr("data-date")));
 			var date = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
 
 			var t = el.attr("data-title") + "\t" + el.attr("data-author") + "\t" + date + "\t" + el.attr("data-price") + "\t" + el.attr("data-isbn");
