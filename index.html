@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<title>ITP Catalog</title>
 
+	<link rel="icon" href="pearson-favicon.ico" type="image/x-icon">
+
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="css/main.css">
@@ -17,12 +19,14 @@
 <body>
 
 <div class="container-fluid">
-	<h1><img src="css/pearson_logo_white_bg.svg"> <span>IT Professional (ITP) Video Catalog</span></h1>
+	<h1><img src="css/pearson_logo_white_bg.svg"> <span>IT Professional (ITP) Video Catalog</span><a id="rep-link" href="https://www.pearsonhighered.com/contact-us/find-your-rep.html" target="_blank">Click here to contact your Pearson representative.</a></h1>
 	<a id="downloadLink">Download List</a>
 
 	<div class="row">
 		<div id="filter-pane" class="col-xs-3">
-			<h2>Filter <span id="num-filters" class="small">all selected</span></h2>
+			<div id="heading">
+				<h2>Filter <span id="num-filters" class="small">all selected</span><button id="toggle-all" class="btn btn-sm btn-success">Toggle All</button></h2>
+			</div>
 
 			<div id="keyword-buttons" class="btn-group" data-toggle="buttons">
 			</div>

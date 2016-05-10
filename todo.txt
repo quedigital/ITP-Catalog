@@ -1,0 +1,7 @@
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// DONE: organize keyword buttons in an equal-row-height table [flexbox]
+// DONE: style rows after layout (for alternate row colors)
+// DONE: add favicon
+// DONE: add show all button (for keywords)

@@ -5,6 +5,8 @@ $(function () {
 	var keywords = [];
 	var items = [];
 
+	var toggleOn = false;
+
 	function onDataLoaded (csv) {
 		parseText(csv);
 		addKeywordButtons();
@@ -15,6 +17,8 @@ $(function () {
 			updateDownloadList();
 			$("#downloadLink")[0].click();
 		});
+
+		$("#toggle-all").click(onClickToggleAll);
 	}
 
 	function trimString (k) {
@@ -84,8 +88,8 @@ $(function () {
 		for (var i = 0; i < keywords.length; i++) {
 			var key = keywords[i];
 
-			var btn = $("<label>", {class: "btn btn-primary keyword-btn", "data-keywords": key });
-			var input = $("<input>", {type: "checkbox", autocomplete: "off"});
+			var btn = $("<label>", {class: "btn btn-primary keyword-btn active", "data-keywords": key });
+			var input = $("<input>", {type: "checkbox", autocomplete: "off"}).prop("checked", true);
 			var span = $("<span>", {class: "glyphicon glyphicon-ok"});
 
 			btn.addClass(classes[i % classes.length]);
@@ -202,14 +206,19 @@ $(function () {
 	}
 
 	function onClickKeyword (event) {
-		var keys = getSelectedKeywords();
-		$("#num-filters").text(keys.length == 0 ? "all selected" : keys.length + " selected");
+		refreshBasedOnKeywords();
+	}
 
-		if (keys.length) {
-			$(".isotope").isotope({filter: filterBySelectedKeywords});
-		} else {
-			$(".isotope").isotope({filter:undefined});
-		}
+	function refreshBasedOnKeywords () {
+		var keys = getSelectedKeywords();
+		var lbl = keys.length;
+		if (keys.length == 0) lbl = "none";
+		else if (keys.length == $("#keyword-buttons input").length) lbl = "all";
+
+
+		$("#num-filters").text(lbl + " selected");
+
+		$(".isotope").isotope({filter: filterBySelectedKeywords});
 	}
 
 	function filterBySelectedKeywords (keys) {
@@ -285,11 +294,21 @@ $(function () {
 		}
 	}
 
+	function onClickToggleAll (event) {
+		$("#keyword-buttons input").prop("checked", toggleOn);
+		if (!toggleOn) {
+			$("#keyword-buttons label.keyword-btn").removeClass("active");
+		} else {
+			$("#keyword-buttons label.keyword-btn").addClass("active");
+		}
+
+		toggleOn = !toggleOn;
+
+		refreshBasedOnKeywords();
+	}
+
 	$.ajax({
 		type: 'GET',
 		url: url,
 	}).done(onDataLoaded);
 });
-
-// DONE: organize keyword buttons in an equal-row-height table [flexbox]
-// DONE: style rows after layout (for alternate row colors)
