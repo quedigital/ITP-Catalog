@@ -7,8 +7,8 @@ $(function () {
 
 	var toggleOn = false;
 
-	function onDataLoaded (csv) {
-		parseText(csv);
+	function onDataLoaded (tsv) {
+		parseText(tsv);
 		addKeywordButtons();
 		addTitles();
 		initializeCatalog();
@@ -46,13 +46,14 @@ $(function () {
 		return a.toLowerCase().localeCompare(b.toLowerCase());
 	}
 
-	function parseText (csv) {
+	function parseText (tsv) {
 		var i = 0, n = 0;
+		tsv += "\r";    // make sure there's a carriage return at the end
 
 		while (i != -1 && n < 10000) {
-			var j = csv.indexOf("\r", i + 1);
+			var j = tsv.indexOf("\r", i + 1);
 			if (j != -1 && n > 0) {
-				var line = csv.substr(i, j - i);
+				var line = tsv.substr(i, j - i);
 				var row = line.split("\t");
 				var key = trimString(row[9]);
 				var keys = key.split(",");
@@ -169,7 +170,13 @@ $(function () {
 			itemSelector: '.catalog-item',
 			getSortData: {
 				author: ".author",
+				upperAuthor: function (itemElem) {
+					return $(itemElem).find(".author").text().toUpperCase();
+				},
 				title: '.title',
+				upperTitle: function (itemElem) {
+					return $(itemElem).find(".title").text().toUpperCase();
+				},
 				"highest-price": '[data-price] parseFloat',
 				"lowest-price": '[data-price] parseFloat',
 				"newest": "[data-date]",
