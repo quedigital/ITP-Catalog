@@ -102,7 +102,7 @@ $(function () {
 		}
 
 		$("#keyword-buttons .btn").on("change", onClickKeyword);
-		$("#sort-buttons .btn").on("change", onClickSort);
+		$("#sort-buttons .btn").on("click", onClickSort);
 		$('#view-buttons').on('click', '.btn', onClickView);
 	}
 
@@ -243,7 +243,7 @@ $(function () {
 
 	function onClickSort (event) {
 		$("#sort-buttons label").removeClass("btn-primary").addClass("btn-default");
-		$(event.target).parent("label").removeClass("btn-default").addClass("btn-primary");
+		$(event.target).removeClass("btn-default").addClass("btn-primary");
 
 		var sortByValue = $(this).find("input").attr("data-sort-by");
 
