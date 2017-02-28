@@ -9,6 +9,8 @@ $(function () {
 
 	var admin = true;
 
+	var savedKeywords = [];
+
 	function onDataLoaded (tsv) {
 		parseText(tsv);
 		addKeywordButtons();
@@ -36,7 +38,13 @@ $(function () {
 			$("#filter-pane").width("auto");
 		});
 
-		$(window).resize(restrictFilterPane);
+		$(window).resize(onResize);
+
+		onResize();
+	}
+
+	function onResize () {
+		$("#filter-pane").data("bs.affix").options.offset = $("#catalog-row").offset().top;
 
 		restrictFilterPane();
 	}
@@ -243,12 +251,10 @@ $(function () {
 
 	function setSelectedKeywords (keywords) {
 		$("#keyword-buttons input").prop("checked", false);
-//		$(".keyword-btn input").prop("checked", false);
 		$("#keyword-buttons label.keyword-btn").removeClass("active");
 
 		for (var i = 0; i < keywords.length; i++) {
 			var keyword = keywords[i];
-			console.log(keyword);
 			var btn = $(".keyword-btn[data-keywords='" + keyword + "']");
 			btn.find("input").prop("checked", true);
 			btn.addClass("active");
@@ -362,19 +368,35 @@ $(function () {
 	}
 
 	function onClickLogo (event) {
-		// show pw screen
-		$(".admin").toggle();
+		$(".form-inline.admin").toggle();
+
+		if (admin) {
+			setAdmin(false);
+		} else {
+			validateAdmin();
+		}
+
+		$("#filter-pane").data("bs.affix").options.offset = $("#catalog-row").offset().top;
+	}
+
+	function validateAdmin () {
+		if ($("#adminInput").val() == "charlie") {
+			setAdmin(true);
+		}
 	}
 
 	function onChangeAdmin (event) {
-		$(".admin").hide();
+		validateAdmin();
+	}
 
-		if ($(event.target).val() == "charlie") {
-			admin = true;
-			$("#pearson-logo").effect("highlight");
-			$("#adminInput").val("");
+	function setAdmin (val) {
+		if (val) {
 			$("body").addClass("admin");
+		} else {
+			$("body").removeClass("admin");
 		}
+
+		admin = val;
 	}
 
 	function onClickLink (event) {
@@ -392,17 +414,21 @@ $(function () {
 			if (!sel) {
 				item.addClass("selected");
 
+				savedKeywords = getSelectedKeywords();
+
 				showForEditing(isbn);
+			} else {
+				setSelectedKeywords(savedKeywords);
 			}
 		}
+	}
 
-		function showForEditing (isbn) {
-			for (var i = 0; i < items.length; i++) {
-				var item = items[i];
-				if (item.isbn == isbn) {
-					var categories = item.keywords.split(",").map(function (item, element) { return item.trim(); });
-					setSelectedKeywords(categories);
-				}
+	function showForEditing (isbn) {
+		for (var i = 0; i < items.length; i++) {
+			var item = items[i];
+			if (item.isbn == isbn) {
+				var categories = item.keywords.split(",").map(function (item, element) { return item.trim(); });
+				setSelectedKeywords(categories);
 			}
 		}
 	}
