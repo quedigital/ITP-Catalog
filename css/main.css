@@ -3,6 +3,10 @@ body {
   margin-bottom: 15em;
   font-family: 'Open Sans', sans-serif; }
 
+div.form-inline.admin {
+  display: none;
+  margin-bottom: 1em; }
+
 #intro {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -43,8 +47,14 @@ body {
 #keyword-buttons .btn.active span.glyphicon {
   opacity: 1; }
 
+#filter-outer {
+  padding: 0px; }
+
 #filter-pane {
-  background-color: #ababab; }
+  background-color: #ababab;
+  padding: 20px 15px 0 15px; }
+  #filter-pane #heading h2 {
+    margin-top: 0; }
   #filter-pane #heading button {
     float: right; }
   #filter-pane #heading:after {
@@ -121,7 +131,7 @@ body {
   padding: 10px;
   background: #e3f3ff;
   transition: background .25s ease-out; }
-.covers-view .catalog-item:hover {
+.covers-view .catalog-item:hover:not(.selected) {
   background: #d0ebe3; }
 .covers-view .catalog-item h3 {
   margin-top: 0; }
@@ -144,6 +154,9 @@ body {
   margin: 0; }
 .covers-view .catalog-item .date {
   font-size: 11px; }
+
+.catalog-item.selected {
+  background-color: yellow !important; }
 
 #catalog {
   margin-top: 3em;
@@ -178,5 +191,12 @@ body {
   border-color: #286d6f; }
   .keyword-5:hover, .keyword-5.active {
     background-color: #286d6f; }
+
+body.admin #filter-pane {
+  background-color: yellow; }
+
+.affix {
+  top: 0;
+  width: 100%; }
 
 /*# sourceMappingURL=main.css.map */

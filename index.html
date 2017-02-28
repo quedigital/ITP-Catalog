@@ -14,13 +14,20 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/isotope.pkgd.min.js"></script>
 	<script src="js/imagesloaded.pkgd.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
 	<script src="catalog.js"></script>
 </head>
 <body>
 
 <div class="container-fluid">
-	<h1><img src="css/pearson_logo_white_bg.svg"> <span>IT Professional (ITP) Video Catalog</span><a id="rep-link" href="https://www.pearsonhighered.com/contact-us/find-your-rep.html" target="_blank">Click here to contact your Pearson representative</a><div class="clearfix"></div>
+	<h1><img src="css/pearson_logo_white_bg.svg" id="pearson-logo"> <span>IT Professional (ITP) Video Catalog</span><a id="rep-link" href="https://www.pearsonhighered.com/contact-us/find-your-rep.html" target="_blank">Click here to contact your Pearson representative</a><div class="clearfix"></div>
 	</h1>
+	<div class="admin form-inline">
+		<div class="form-group">
+			<label for="adminInput">Admin </label>
+			<input type="password" class="form-control" id="adminInput" placeholder="">
+		</div>
+	</div>
 	<div id="intro">
 		<div class="container">
 			<p>Pearson's <strong>IT Professional (ITP)</strong> group produces hundreds of hours of high-quality instructional video each year.  These videos are sold through Pearson's websites (including InformIT.com), through the Safari Books Online Reference Library, and to colleges and universities across the country.  The links on this webpage will take you to each video's catalog page on InformIT.com.</p>
@@ -29,13 +36,15 @@
 	</div>
 	<a id="downloadLink">Download List</a>
 
-	<div class="row">
-		<div id="filter-pane" class="col-xs-3">
-			<div id="heading">
-				<h2>Filter <span id="num-filters" class="small">all selected</span><button id="toggle-all" class="btn btn-sm btn-success">Toggle All</button></h2>
-			</div>
+	<div id="catalog-row" class="row">
+		<div class="col-xs-3" id="filter-outer">
+			<div id="filter-pane">
+				<div id="heading">
+					<h2>Filter <span id="num-filters" class="small">all selected</span><button id="toggle-all" class="btn btn-sm btn-success">Toggle All</button></h2>
+				</div>
 
-			<div id="keyword-buttons" class="btn-group" data-toggle="buttons">
+				<div id="keyword-buttons" class="btn-group" data-toggle="buttons">
+				</div>
 			</div>
 		</div>
 		<div id="sort-pane" class="col-xs-9">

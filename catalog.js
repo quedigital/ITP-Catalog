@@ -7,6 +7,8 @@ $(function () {
 
 	var toggleOn = false;
 
+	var admin = true;
+
 	function onDataLoaded (tsv) {
 		parseText(tsv);
 		addKeywordButtons();
@@ -19,6 +21,29 @@ $(function () {
 		});
 
 		$("#toggle-all").click(onClickToggleAll);
+
+		$("#pearson-logo").click(onClickLogo);
+		$("#adminInput").change(onChangeAdmin);
+
+		$("#filter-pane").affix({offset: {top: $("#catalog-row").offset().top} });
+
+		$("#filter-pane").on("affix.bs.affix", function () {
+			var w = $("#filter-outer").width();
+			$("#filter-pane").outerWidth(w);
+		});
+
+		$("#filter-pane").on("affix-top.bs.affix", function () {
+			$("#filter-pane").width("auto");
+		});
+
+		$(window).resize(restrictFilterPane);
+
+		restrictFilterPane();
+	}
+
+	function restrictFilterPane () {
+		var w = $("#filter-outer").width();
+		$("#filter-pane").css("max-width", w);
 	}
 
 	function trimString (k) {
@@ -90,7 +115,7 @@ $(function () {
 			var key = keywords[i];
 
 			var btn = $("<label>", {class: "btn btn-primary keyword-btn active", "data-keywords": key });
-			var input = $("<input>", {type: "checkbox", autocomplete: "off"}).prop("checked", true);
+			var input = $("<input>", {type: "checkbox"}).prop("checked", true);
 			var span = $("<span>", {class: "glyphicon glyphicon-ok"});
 
 			btn.addClass(classes[i % classes.length]);
@@ -127,6 +152,7 @@ $(function () {
 
 			var h = $("<h3>");
 			var a = $("<a>", { class: "title", text: item.title, href: "http://www.informit.com/title/" + item.isbn, target: "_blank" });
+			a.click(onClickLink);
 			h.append(a);
 			var div = $("<div>", { class: "cover"} );
 			var img = $("<img>", { src: "https://www.informit.com/ShowCover.aspx?isbn=" + item.isbn + "&type=f" } );
@@ -146,7 +172,9 @@ $(function () {
 			var listHolder = $("<div>", { class: "list-holder" });
 			var t = ", " + item.author + " (" + item.date.getFullYear() + ") " + item.price + " " + item.isbn;
 			var p = $("<p>");
-			p.append(a.clone());
+			var newlink = a.clone();
+			newlink.click(onClickLink);
+			p.append(newlink);
 			p.append($("<span>", { class: "author", text: item.author} ));
 			p.append($("<span>", { class: "date", text: item.date.getFullYear() }));
 			p.append($("<span>", { class: "price", text: item.price }));
@@ -213,8 +241,26 @@ $(function () {
 		return selected;
 	}
 
+	function setSelectedKeywords (keywords) {
+		$("#keyword-buttons input").prop("checked", false);
+//		$(".keyword-btn input").prop("checked", false);
+		$("#keyword-buttons label.keyword-btn").removeClass("active");
+
+		for (var i = 0; i < keywords.length; i++) {
+			var keyword = keywords[i];
+			console.log(keyword);
+			var btn = $(".keyword-btn[data-keywords='" + keyword + "']");
+			btn.find("input").prop("checked", true);
+			btn.addClass("active");
+		}
+	}
+
 	function onClickKeyword (event) {
-		refreshBasedOnKeywords();
+		if (!admin) {
+			refreshBasedOnKeywords();
+		} else {
+
+		}
 	}
 
 	function refreshBasedOnKeywords () {
@@ -313,6 +359,52 @@ $(function () {
 		toggleOn = !toggleOn;
 
 		refreshBasedOnKeywords();
+	}
+
+	function onClickLogo (event) {
+		// show pw screen
+		$(".admin").toggle();
+	}
+
+	function onChangeAdmin (event) {
+		$(".admin").hide();
+
+		if ($(event.target).val() == "charlie") {
+			admin = true;
+			$("#pearson-logo").effect("highlight");
+			$("#adminInput").val("");
+			$("body").addClass("admin");
+		}
+	}
+
+	function onClickLink (event) {
+		if (admin && event.shiftKey) {
+			event.preventDefault();
+
+			var item = $(event.target).parents(".catalog-item");
+
+			var isbn = item.attr("data-isbn");
+
+			var sel = item.hasClass("selected");
+
+			$(".isotope .catalog-item.selected").removeClass("selected");
+
+			if (!sel) {
+				item.addClass("selected");
+
+				showForEditing(isbn);
+			}
+		}
+
+		function showForEditing (isbn) {
+			for (var i = 0; i < items.length; i++) {
+				var item = items[i];
+				if (item.isbn == isbn) {
+					var categories = item.keywords.split(",").map(function (item, element) { return item.trim(); });
+					setSelectedKeywords(categories);
+				}
+			}
+		}
 	}
 
 	$.ajax({

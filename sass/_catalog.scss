@@ -4,6 +4,11 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
+div.form-inline.admin {
+	display: none;
+	margin-bottom: 1em;
+}
+
 #intro {
 	padding-top: 15px;
 	padding-bottom: 15px;
@@ -61,11 +66,17 @@ body {
     opacity: 1;
 }
 
+#filter-outer {
+	padding: 0px;
+}
+
 #filter-pane {
     background-color: #ababab;
+	padding: 20px 15px 0 15px;
 
 	#heading {
 		h2 {
+			margin-top: 0;
 		}
 
 		button {
@@ -186,11 +197,11 @@ body {
         transition: background .25s ease-out;
     }
 
-    .catalog-item:hover {
+    .catalog-item:hover:not(.selected) {
         background: #d0ebe3;
     }
 
-    .catalog-item h3 {
+	.catalog-item h3 {
         margin-top: 0;
     }
 
@@ -222,6 +233,10 @@ body {
     .catalog-item .date {
         font-size: 11px;
     }
+}
+
+.catalog-item.selected {
+	background-color: yellow !important;
 }
 
 #catalog {
@@ -275,4 +290,15 @@ body {
 	&:hover, &.active {
 		background-color: #286d6f;
 	}
+}
+
+body.admin {
+	#filter-pane {
+		background-color: yellow;
+	}
+}
+
+.affix {
+	top: 0;
+	width: 100%;
 }
