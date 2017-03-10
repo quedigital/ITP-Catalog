@@ -10,6 +10,10 @@
 	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="css/main.css">
 
+	<script src="https://www.gstatic.com/firebasejs/3.6.10/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.10/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.6.10/firebase-storage.js"></script>
+
 	<script src="js/jquery-2.1.3.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/isotope.pkgd.min.js"></script>
@@ -22,10 +26,13 @@
 <div class="container-fluid">
 	<h1><img src="css/pearson_logo_white_bg.svg" id="pearson-logo"> <span>IT Professional (ITP) Video Catalog</span><a id="rep-link" href="https://www.pearsonhighered.com/contact-us/find-your-rep.html" target="_blank">Click here to contact your Pearson representative</a><div class="clearfix"></div>
 	</h1>
-	<div class="admin form-inline">
+	<div id="admin-access" class="form-inline">
 		<div class="form-group">
+			<!--
 			<label for="adminInput">Admin </label>
 			<input type="password" class="form-control" id="adminInput" placeholder="">
+			-->
+			<button id="update-catalog" class="btn btn-success">Update Catalog</button>
 		</div>
 	</div>
 	<div id="intro">
@@ -44,6 +51,14 @@
 				</div>
 
 				<div id="keyword-buttons" class="btn-group" data-toggle="buttons">
+				</div>
+
+				<div id="add-keyword-form" class="form-inline">
+					<div class="form-group">
+						<label for="addKeywordInput">Add Keyword </label>
+						<input type="text" class="form-control" id="addKeywordInput">
+					</div>
+					<button id="add-keyword-button" type="submit" class="btn btn-success">Add</button>
 				</div>
 			</div>
 		</div>
@@ -93,6 +108,26 @@
 			<div id="catalog" class="isotope covers-view">
 			</div>
 		</div>
+	</div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Alert!</h4>
+			</div>
+			<div class="modal-body">
+				<p>Catalog updated.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
 	</div>
 </div>
 

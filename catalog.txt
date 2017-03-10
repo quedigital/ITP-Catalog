@@ -446,4 +446,4 @@ ISBN 10	ISBN 13 	Title	Author	Length	Discount	Instock	List Price	Editor	Category
 134211383	9780134211381	Applied Data Mining for Business Analytics LiveLessons (Video Training)	Dursun Delen		x	6/13/16	$299.99	Phifer, Julie	Big Data/Data Analytics
 134578074	9780134578071	Leading SAFe (Scaled Agile Framework) 4.0 LiveLessons (Video Training), 2n ..	Leffingwell		x	5/27/16	$299.99	Phifer, Julie	Agile
 134589203	9780134589206	Lean Principles for Scrum LiveLessons (Video Training)	Norman	4+	x	6/30/2016	$299.99	Phifer, Julie	Agile
-134658280	9780134658285	Test-Driven Development (TDD) for Android LiveLessons	Shum	2.5	x	7/26/16	$129.99	Phifer, Julie	Software Engineering/Software Methods
+134658280	9780134658285	Test-Driven Development (TDD) for Android LiveLessons	Shum	2.5	x	7/26/16	$129.99	Phifer, Julie	Software Engineering/Software Methods	hide

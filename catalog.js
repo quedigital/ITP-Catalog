@@ -1,15 +1,28 @@
 $(function () {
 
-	var url = "catalog.txt";
+	var data_url = "https://firebasestorage.googleapis.com/v0/b/itp-catalog.appspot.com/o/catalog.txt?alt=media&token=f5fda839-9798-48b3-a963-0086848930f0";
+
+	var keyword_classes = ["keyword-1", "keyword-2", "keyword-3", "keyword-4", "keyword-5"];
 
 	var keywords = [];
 	var items = [];
 
 	var toggleOn = false;
 
-	var admin = true;
+	var admin = false;
 
 	var savedKeywords = [];
+
+	function configureFirebase () {
+		var config = {
+			apiKey: 'AIzaSyBZUAltnRHEK5FU0Tj7iS8Ro22HjkhVijM',
+			authDomain: 'itp-catalog.firebaseapp.com',
+			databaseURL: '<your-database-url>',
+			storageBucket: 'gs://itp-catalog.appspot.com'
+		};
+
+		firebase.initializeApp(config);
+	}
 
 	function onDataLoaded (tsv) {
 		parseText(tsv);
@@ -25,7 +38,6 @@ $(function () {
 		$("#toggle-all").click(onClickToggleAll);
 
 		$("#pearson-logo").click(onClickLogo);
-		$("#adminInput").change(onChangeAdmin);
 
 		$("#filter-pane").affix({offset: {top: $("#catalog-row").offset().top} });
 
@@ -38,7 +50,16 @@ $(function () {
 			$("#filter-pane").width("auto");
 		});
 
+		$("#add-keyword-button").click(onClickAddKeyword);
+
+		$("#sort-buttons .btn").on("click", onClickSort);
+		$('#view-buttons').on('click', '.btn', onClickView);
+
+		$("#update-catalog").click(onClickUpdateCatalog);
+
 		$(window).resize(onResize);
+
+		setAdmin(false);
 
 		onResize();
 	}
@@ -85,7 +106,7 @@ $(function () {
 
 		while (i != -1 && n < 10000) {
 			var j = tsv.indexOf("\r", i + 1);
-			if (j != -1 && n > 0) {
+			if (j != -1 && n > 0 && (j - i > 2)) {
 				var line = tsv.substr(i, j - i);
 				var row = line.split("\t");
 				var key = trimString(row[9]);
@@ -98,12 +119,18 @@ $(function () {
 				}
 
 				var item = {
+					isbn10: trimString(row[0]),
 					isbn: trimString(row[1]),
 					title: trimString(row[2]),
 					author: trimString(row[3]),
+					discountCode: trimString(row[5]),
+					instock: row[6],
 					date: toDate(row[6]),
 					price: row[7],
-					keywords: key
+					keywords: key,
+					duration: row[4],
+					editor: trimString(row[8]),
+					show: row[10] == "hide" ? "hide" : ""
 				};
 
 				if (item.title)
@@ -117,26 +144,29 @@ $(function () {
 	}
 
 	function addKeywordButtons () {
-		var classes = ["keyword-1", "keyword-2", "keyword-3", "keyword-4", "keyword-5"];
-
 		for (var i = 0; i < keywords.length; i++) {
 			var key = keywords[i];
-
-			var btn = $("<label>", {class: "btn btn-primary keyword-btn active", "data-keywords": key });
-			var input = $("<input>", {type: "checkbox"}).prop("checked", true);
-			var span = $("<span>", {class: "glyphicon glyphicon-ok"});
-
-			btn.addClass(classes[i % classes.length]);
-			var lbl = $("<span>", { text: " " + key });
-			btn.append(lbl);
-			btn.append(input);
-			btn.prepend(span);
-			$("#keyword-buttons").append(btn);
+			addKeywordButton(key);
 		}
+	}
 
-		$("#keyword-buttons .btn").on("change", onClickKeyword);
-		$("#sort-buttons .btn").on("click", onClickSort);
-		$('#view-buttons').on('click', '.btn', onClickView);
+	function addKeywordButton (keyword, checked) {
+		if (checked == undefined) checked = true;
+
+		var btn = $("<label>", {class: "btn btn-primary keyword-btn " + (checked ? "active" : ""), "data-keywords": keyword });
+		var input = $("<input>", {type: "checkbox"}).prop("checked", checked);
+		var span = $("<span>", {class: "glyphicon glyphicon-ok"});
+
+		var n = $("#keyword-buttons .btn").length;
+
+		btn.addClass(keyword_classes[n % keyword_classes.length]);
+		var lbl = $("<span>", { text: " " + keyword });
+		btn.append(lbl);
+		btn.append(input);
+		btn.prepend(span);
+		$("#keyword-buttons").append(btn);
+
+		btn.on("change", onClickKeyword);
 	}
 
 	function addTitles () {
@@ -153,8 +183,19 @@ $(function () {
 				"data-keywords": item.keywords,
 				"data-price": toPrice(item.price),
 				"data-date": item.date.getTime(),
+				"data-show": item.show,
+				"data-duration": item.duration,
 				"data-index": i
 			});
+
+			var show = item.show != "hide";
+
+			var showOrHide = $("<input>", {class: "show-or-hide", type: "checkbox"}).prop("checked", show);
+			showOrHide.change(onClickShowHide);
+			el.append(showOrHide);
+
+			if (!show)
+				el.addClass("hidden-item");
 
 			var coverHolder = $("<div>", { class: "cover-holder" });
 
@@ -170,10 +211,14 @@ $(function () {
 			div.append(img);
 			var author = $("<p>", { class: "author", text: item.author });
 			var date = $("<p>", { class: "date", text: item.date.getFullYear() });
+			var duration = $("<p>", { class: "duration", text: item.duration, title: "Length of video" });
+			duration.on("input", onChangeDuration);
+
 			coverHolder.append(h);
 			coverHolder.append(div);
 			coverHolder.append(author);
 			coverHolder.append(date);
+			coverHolder.append(duration);
 
 			el.append(coverHolder);
 
@@ -185,6 +230,7 @@ $(function () {
 			p.append(newlink);
 			p.append($("<span>", { class: "author", text: item.author} ));
 			p.append($("<span>", { class: "date", text: item.date.getFullYear() }));
+			p.append($("<span>", { class: "duration", text: item.duration }));
 			p.append($("<span>", { class: "price", text: item.price }));
 			p.append($("<span>", { class: "isbn", text: item.isbn }));
 			listHolder.append(p);
@@ -259,17 +305,29 @@ $(function () {
 			btn.find("input").prop("checked", true);
 			btn.addClass("active");
 		}
+
+		refreshKeywordCount();
 	}
 
 	function onClickKeyword (event) {
 		if (!admin) {
 			refreshBasedOnKeywords();
 		} else {
+			refreshKeywordCount();
 
+			// save new keywords for this isbn
+			var isbn = getSelectedISBN();
+			setItemData(isbn, "keywords", getSelectedKeywords().join(","));
 		}
 	}
 
 	function refreshBasedOnKeywords () {
+		refreshKeywordCount();
+
+		$(".isotope").isotope({filter: filterBySelectedKeywords});
+	}
+
+	function refreshKeywordCount () {
 		var keys = getSelectedKeywords();
 		var lbl = keys.length;
 		if (keys.length == 0) lbl = "none";
@@ -277,8 +335,6 @@ $(function () {
 
 
 		$("#num-filters").text(lbl + " selected");
-
-		$(".isotope").isotope({filter: filterBySelectedKeywords});
 	}
 
 	function filterBySelectedKeywords (keys) {
@@ -323,18 +379,23 @@ $(function () {
 	}
 
 	function updateDownloadList () {
-		var textToWrite = "title\tauthor\tdate\tprice\tISBN\n";
+		var textToWrite = "title\tauthor\tdate\tprice\tduration\tISBN\n";
 
 		var iso = $(".isotope").data('isotope');
 		for (var i = 0; i < iso.filteredItems.length; i++) {
 			var el = $(iso.filteredItems[i].element);
 
-			var d = new Date(parseInt(el.attr("data-date")));
-			var date = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
+			var show = el.attr("data-show");
+			if (show == "hide") {
+				// hidden item
+			} else {
+				var d = new Date(parseInt(el.attr("data-date")));
+				var date = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
 
-			var t = el.attr("data-title") + "\t" + el.attr("data-author") + "\t" + date + "\t" + el.attr("data-price") + "\t" + el.attr("data-isbn");
+				var t = el.attr("data-title") + "\t" + el.attr("data-author") + "\t" + date + "\t$" + el.attr("data-price") + "\t" + el.attr("data-duration") + "\t" + el.attr("data-isbn");
 
-			textToWrite += t + "\n";
+				textToWrite += t + "\n";
+			}
 		}
 
 		var textFileAsBlob = new Blob([textToWrite], {type: 'text/plain'});
@@ -342,6 +403,20 @@ $(function () {
 		var downloadLink = $("#downloadLink")[0];
 		downloadLink.download = fileNameToSaveAs;
 		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+	}
+
+	function getCatalogAsBlob () {
+		var textToWrite = "ISBN 10\tISBN 13\tTitle\tAuthor\tLength\tDiscount\tInstock\tList Price\tEditor\tCategory\tShow\r\n";
+
+		for (var i = 0; i < items.length; i++) {
+			var item = items[i];
+
+			var t = item.isbn10 + "\t" + item.isbn + "\t" + item.title + "\t" + item.author + "\t" + item.duration + "\t" + item.discountCode + "\t" + item.instock + "\t" + item.price + "\t" + item.editor + "\t" +  item.keywords + "\t" + item.show;
+
+			textToWrite += t + "\r\n";
+		}
+
+		return new Blob([textToWrite], {type: 'text/plain'});
 	}
 
 	function colorCodeResults (items) {
@@ -368,9 +443,9 @@ $(function () {
 	}
 
 	function onClickLogo (event) {
-		$(".form-inline.admin").toggle();
-
 		if (admin) {
+			signoutApp();
+
 			setAdmin(false);
 		} else {
 			validateAdmin();
@@ -379,28 +454,62 @@ $(function () {
 		$("#filter-pane").data("bs.affix").options.offset = $("#catalog-row").offset().top;
 	}
 
+	function signoutApp () {
+		firebase.auth().signOut().then(function() {
+			// Sign-out successful.
+		}, function(error) {
+			// An error happened.
+		});
+	}
+
 	function validateAdmin () {
+		/*
 		if ($("#adminInput").val() == "charlie") {
 			setAdmin(true);
 		}
-	}
+		*/
 
-	function onChangeAdmin (event) {
-		validateAdmin();
+		var provider = new firebase.auth.GoogleAuthProvider();
+//		provider.addScope('email');
+
+		firebase.auth().signInWithPopup(provider).then(function(result) {
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			var token = result.credential.accessToken;
+			// The signed-in user info.
+			var user = result.user;
+			// ...
+			setAdmin(true);
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			// ...
+		});
+
 	}
 
 	function setAdmin (val) {
 		if (val) {
+			$("#admin-access").show();
 			$("body").addClass("admin");
+			$(".catalog-item p.duration").attr("contenteditable", true);
 		} else {
+			$("#admin-access").hide();
 			$("body").removeClass("admin");
+			$(".catalog-item p.duration").attr("contenteditable", false);
 		}
 
 		admin = val;
+
+		relayoutCatalog();
 	}
 
 	function onClickLink (event) {
-		if (admin && event.shiftKey) {
+		if (admin) {
 			event.preventDefault();
 
 			var item = $(event.target).parents(".catalog-item");
@@ -417,6 +526,8 @@ $(function () {
 				savedKeywords = getSelectedKeywords();
 
 				showForEditing(isbn);
+
+				refreshKeywordCount();
 			} else {
 				setSelectedKeywords(savedKeywords);
 			}
@@ -433,8 +544,71 @@ $(function () {
 		}
 	}
 
+	function getSelectedISBN () {
+		var sel = $(".catalog-item.selected");
+		if (sel.length)
+			return sel.attr("data-isbn");
+		else
+			return undefined;
+	}
+
+	function setItemData (isbn, field, data) {
+		for (var i = 0; i < items.length; i++) {
+			var item = items[i];
+			if (item.isbn == isbn) {
+				item[field] = data;
+				break;
+			}
+		}
+	}
+
+	function onClickAddKeyword (event) {
+		var keyword = $("#addKeywordInput").val();
+		if (keyword) {
+			addKeywordButton(keyword, false);
+
+			$("#addKeywordInput").val("");
+		}
+	}
+
+	function onClickShowHide (event) {
+		var check = $(event.target);
+		var item = check.parents(".catalog-item");
+		var show = check.prop("checked");
+		item.attr("data-show", show);
+		if (show)
+			item.removeClass("hidden-item");
+		else
+			item.addClass("hidden-item");
+
+		var isbn = item.attr("data-isbn");
+		setItemData(isbn, "show", show ? "" : "hide");
+	}
+
+	function onChangeDuration (event) {
+		var duration = $(event.target).text();
+
+		var item = $(event.target).parents(".catalog-item");
+		var isbn = item.attr("data-isbn");
+
+		setItemData(isbn, "duration", duration);
+	}
+
+	function onClickUpdateCatalog (event) {
+		var textBlob = getCatalogAsBlob();
+
+		var storage = firebase.storage();
+		var storageRef = storage.ref();
+		var ref = storageRef.child("catalog.txt");
+		ref.put(textBlob).then(function(snapshot) {
+			$("#myModal").modal();
+		});
+	}
+
 	$.ajax({
 		type: 'GET',
-		url: url,
+		url: data_url,
 	}).done(onDataLoaded);
+
+	configureFirebase();
 });

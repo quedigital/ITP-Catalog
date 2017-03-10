@@ -4,9 +4,9 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
-div.form-inline.admin {
-	display: none;
+#admin-access {
 	margin-bottom: 1em;
+	display: none;
 }
 
 #intro {
@@ -89,6 +89,17 @@ div.form-inline.admin {
 			display: block;
 		}
 	}
+
+	#add-keyword-form {
+		margin-bottom: 20px;
+		display: none;
+	}
+
+	&.affix, &.affix-bottom {
+		top: 0 !important;
+		width: 100%;
+		position: fixed !important;
+	}
 }
 
 #sort-pane {
@@ -157,27 +168,34 @@ div.form-inline.admin {
         }
 
         .title {
-            width: 40em;
+            width: 45%;
         }
 
         .author {
-            width: 10em;
+            width: 15%;
             padding-left: 1em;
         }
 
         .date {
-            width: 5em;
+            width: 8%;
             padding-left: 1em;
         }
 
+		.duration {
+			width: 8%;
+		}
+
         .price {
-            width: 5em;
+            width: 8%;
             padding-left: 1em;
         }
 
         .isbn {
-            width: 12em;
+            width: 10%;
             padding-left: 1em;
+			font-family: "Lucida Console", Courier;
+			font-size: smaller;
+			vertical-align: middle;
         }
     }
 }
@@ -230,13 +248,34 @@ div.form-inline.admin {
         margin: 0;
     }
 
-    .catalog-item .date {
-        font-size: 11px;
+    .catalog-item {
+		.date {
+			font-size: 11px;
+		}
+
+		.duration {
+			font-size: smaller;
+		}
     }
+}
+
+.catalog-item .duration:not(:empty):after {
+	display: inline;
+	content: " hours";
 }
 
 .catalog-item.selected {
 	background-color: yellow !important;
+}
+
+.catalog-item input.show-or-hide {
+	display: none;
+}
+
+body:not(.admin) {
+	.catalog-item.hidden-item {
+		display: none;
+	}
 }
 
 #catalog {
@@ -295,10 +334,16 @@ div.form-inline.admin {
 body.admin {
 	#filter-pane {
 		background-color: yellow;
-	}
-}
 
-.affix {
-	top: 0;
-	width: 100%;
+		#add-keyword-form {
+			display: block;
+		}
+	}
+
+	.catalog-item {
+		input.show-or-hide {
+			float: right;
+			display: block;
+		}
+	}
 }

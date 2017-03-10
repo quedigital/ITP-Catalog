@@ -3,9 +3,9 @@ body {
   margin-bottom: 15em;
   font-family: 'Open Sans', sans-serif; }
 
-div.form-inline.admin {
-  display: none;
-  margin-bottom: 1em; }
+#admin-access {
+  margin-bottom: 1em;
+  display: none; }
 
 #intro {
   padding-top: 15px;
@@ -61,6 +61,13 @@ div.form-inline.admin {
     clear: both;
     content: "";
     display: block; }
+  #filter-pane #add-keyword-form {
+    margin-bottom: 20px;
+    display: none; }
+  #filter-pane.affix, #filter-pane.affix-bottom {
+    top: 0 !important;
+    width: 100%;
+    position: fixed !important; }
 
 #sort-pane {
   background-color: #c4c4c4; }
@@ -107,19 +114,24 @@ div.form-inline.admin {
       display: inline-block;
       vertical-align: top; }
     .list-view p .title {
-      width: 40em; }
+      width: 45%; }
     .list-view p .author {
-      width: 10em;
+      width: 15%;
       padding-left: 1em; }
     .list-view p .date {
-      width: 5em;
+      width: 8%;
       padding-left: 1em; }
+    .list-view p .duration {
+      width: 8%; }
     .list-view p .price {
-      width: 5em;
+      width: 8%;
       padding-left: 1em; }
     .list-view p .isbn {
-      width: 12em;
-      padding-left: 1em; }
+      width: 10%;
+      padding-left: 1em;
+      font-family: "Lucida Console", Courier;
+      font-size: smaller;
+      vertical-align: middle; }
 
 .covers-view .list-holder {
   display: none; }
@@ -154,9 +166,21 @@ div.form-inline.admin {
   margin: 0; }
 .covers-view .catalog-item .date {
   font-size: 11px; }
+.covers-view .catalog-item .duration {
+  font-size: smaller; }
+
+.catalog-item .duration:not(:empty):after {
+  display: inline;
+  content: " hours"; }
 
 .catalog-item.selected {
   background-color: yellow !important; }
+
+.catalog-item input.show-or-hide {
+  display: none; }
+
+body:not(.admin) .catalog-item.hidden-item {
+  display: none; }
 
 #catalog {
   margin-top: 3em;
@@ -194,9 +218,10 @@ div.form-inline.admin {
 
 body.admin #filter-pane {
   background-color: yellow; }
-
-.affix {
-  top: 0;
-  width: 100%; }
+  body.admin #filter-pane #add-keyword-form {
+    display: block; }
+body.admin .catalog-item input.show-or-hide {
+  float: right;
+  display: block; }
 
 /*# sourceMappingURL=main.css.map */
