@@ -102,11 +102,10 @@ $(function () {
 
 	function parseText (tsv) {
 		var i = 0, n = 0;
-		tsv += "\r";    // make sure there's a carriage return at the end
 
 		while (i != -1 && n < 10000) {
-			var j = tsv.indexOf("\r", i + 1);
-			if (j != -1 && n > 0 && (j - i > 2)) {
+			var j = tsv.indexOf("\n", i + 1);
+			if (j != -1 && n > 0) {
 				var line = tsv.substr(i, j - i);
 				var row = line.split("\t");
 				var key = trimString(row[9]);
@@ -337,7 +336,7 @@ $(function () {
 		$("#num-filters").text(lbl + " selected");
 	}
 
-	function filterBySelectedKeywords (keys) {
+	function filterBySelectedKeywords () {
 		var keys = getSelectedKeywords();
 		var this_keys = $(this).attr("data-keywords").split(",");
 		for (var i = 0; i < this_keys.length; i++) {
@@ -406,14 +405,14 @@ $(function () {
 	}
 
 	function getCatalogAsBlob () {
-		var textToWrite = "ISBN 10\tISBN 13\tTitle\tAuthor\tLength\tDiscount\tInstock\tList Price\tEditor\tCategory\tShow\r\n";
+		var textToWrite = "ISBN 10\tISBN 13\tTitle\tAuthor\tLength\tDiscount\tInstock\tList Price\tEditor\tCategory\tShow\n";
 
 		for (var i = 0; i < items.length; i++) {
 			var item = items[i];
 
 			var t = item.isbn10 + "\t" + item.isbn + "\t" + item.title + "\t" + item.author + "\t" + item.duration + "\t" + item.discountCode + "\t" + item.instock + "\t" + item.price + "\t" + item.editor + "\t" +  item.keywords + "\t" + item.show;
 
-			textToWrite += t + "\r\n";
+			textToWrite += t + "\n";
 		}
 
 		return new Blob([textToWrite], {type: 'text/plain'});

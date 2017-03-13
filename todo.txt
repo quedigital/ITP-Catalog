@@ -1,4 +1,5 @@
-// TODO: scraper should use Firebase file too
+// TODO: check for duplicate ISBNs
+// TODO: move server app to Heroku
 // TODO: create secure server using node.js, expressjs/session, session-file-store to restrict access
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,3 +18,4 @@
 // DONE: the affix goes haywire when switching to some combination of list view or toggling all keywords [setting affix-bottom style overrides seemed to help]
 // DONE: update catalog.txt on Firebase storage
 // DONE: restrict updating to specific users [using a Firebase Storage rule with specific request.auth.uid's]
+// DONE: scraper should use Firebase file too
