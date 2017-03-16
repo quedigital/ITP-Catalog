@@ -13,6 +13,10 @@ $(function () {
 
 	var savedKeywords = [];
 
+	function initialize () {
+		configureFirebase();
+	}
+
 	function configureFirebase () {
 		var config = {
 			apiKey: 'AIzaSyBZUAltnRHEK5FU0Tj7iS8Ro22HjkhVijM',
@@ -309,13 +313,14 @@ $(function () {
 	}
 
 	function onClickKeyword (event) {
-		if (!admin) {
+		var isbn = getSelectedISBN();
+
+		if (!admin || isbn == undefined) {
 			refreshBasedOnKeywords();
 		} else {
 			refreshKeywordCount();
 
 			// save new keywords for this isbn
-			var isbn = getSelectedISBN();
 			setItemData(isbn, "keywords", getSelectedKeywords().join(","));
 		}
 	}
@@ -609,5 +614,5 @@ $(function () {
 		url: data_url,
 	}).done(onDataLoaded);
 
-	configureFirebase();
+	initialize();
 });
