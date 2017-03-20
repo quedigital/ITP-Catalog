@@ -52,7 +52,9 @@ body {
 
 #filter-pane {
   background-color: #ababab;
-  padding: 20px 15px 0 15px; }
+  padding: 20px 15px 0 15px;
+  max-height: 100%;
+  overflow: scroll; }
   #filter-pane #heading h2 {
     margin-top: 0; }
   #filter-pane #heading button {
@@ -81,10 +83,13 @@ body {
 #keyword-buttons .btn {
   width: 50%;
   white-space: normal;
-  word-break: break-word;
+  word-break: break-all;
   display: flex;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: smaller; }
   #keyword-buttons .btn span {
     margin-right: 10px; }
 

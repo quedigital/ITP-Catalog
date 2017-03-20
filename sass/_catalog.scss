@@ -73,6 +73,8 @@ body {
 #filter-pane {
     background-color: #ababab;
 	padding: 20px 15px 0 15px;
+	max-height: 100%;
+	overflow: scroll;
 
 	#heading {
 		h2 {
@@ -116,10 +118,13 @@ body {
 #keyword-buttons .btn {
     width: 50%;
     white-space: normal;
-    word-break: break-word;
+    word-break: break-all;
     display: flex;
     align-items: center;
     justify-content: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	font-size: smaller;
 
     span {
         margin-right: 10px;
@@ -281,9 +286,6 @@ body:not(.admin) {
 #catalog {
     margin-top: 3em;
     padding-bottom: 3em;
-}
-
-.keyword-btn {
 }
 
 .keyword-1 {

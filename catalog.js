@@ -34,6 +34,8 @@ $(function () {
 		addTitles();
 		initializeCatalog();
 
+		listDuplicates();
+
 		$("#download-button").click(function () {
 			updateDownloadList();
 			$("#downloadLink")[0].click();
@@ -474,7 +476,7 @@ $(function () {
 		*/
 
 		var provider = new firebase.auth.GoogleAuthProvider();
-//		provider.addScope('email');
+		provider.addScope('email');
 
 		firebase.auth().signInWithPopup(provider).then(function(result) {
 			// This gives you a Google Access Token. You can use it to access the Google API.
@@ -607,6 +609,19 @@ $(function () {
 		ref.put(textBlob).then(function(snapshot) {
 			$("#myModal").modal();
 		});
+	}
+
+	function listDuplicates () {
+		for (var i = 0; i < items.length; i++) {
+			var isbn1 = items[i].isbn;
+			for (var j = 0; j < items.length; j++) {
+				var isbn2 = items[j].isbn;
+				if (isbn1 == isbn2 && i != j) {
+					console.log("duplicate: " + isbn1 + " " + items[i].title + " and " + items[j].title);
+					break;
+				}
+			}
+		}
 	}
 
 	$.ajax({
